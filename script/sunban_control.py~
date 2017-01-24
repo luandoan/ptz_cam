@@ -1,0 +1,88 @@
+#!/usr/bin/env python
+
+import rospy
+import urllib2
+import time
+import cv2
+from sensor_msgs.msg import Joy
+
+def control_sunba(vertical, horizontal, zoom):
+    if(horizontal>0):
+	goRight()
+	time.sleep(0.01)
+	print("PTZ pan to the right")
+    elif(horizontal<0):
+	goLeft()
+	time.sleep(0.01)
+	print("PTZ pan to the left")
+    elif(vertical>0):
+	lookUp()
+	time.sleep(0.01)
+	print("PTZ look up)
+    elif(vertical<0):
+	lookDown()
+	time.sleep(0.01)
+	print("PTZ look down")
+    elif(zoom>0):
+	zoomTile()
+	time.sleep(0.01)
+	print("PTZ zooming in")
+    elif(zoom<0):
+	zoomWide()
+	time.sleep(0.01)
+	print("PTZ zooming out")
+
+def goRight():
+    ip = 'http://10.10.10.13/?command=ptz_req&req=stop&param=directionleft&channel=1&stream=0'
+    fullURL = ip
+    response = urllib2.urlopen(fullURL)
+    rospy.loginfo(fullURL)
+	
+def goLeft():
+    ip = 'http://10.10.10.13/?command=ptz_req&req=stop&param=directionright&channel=1&stream=0'
+    fullURL = ip
+    response = urllib2.urlopen(fullURL)
+    rospy.loginfo(fullURL)
+
+def lookUp():
+    ip = 'http://10.10.10.13/?command=ptz_req&req=stop&param=directiondown&channel=1&stream=0'
+    fullURL = ip
+    response = urllib2.urlopen(fullURL)
+    rospy.loginfo(fullURL)
+
+def lookDown():
+    ip = 'http://10.10.10.13/?command=ptz_req&req=stop&param=directionup&channel=1&stream=0'
+    fullURL = ip
+    response = urllib2.urlopen(fullURL)
+    rospy.loginfo(fullURL)
+
+def zoomTile():
+    ip = 'http://10.10.10.13/?command=ptz_req&req=stop&param=zoomtile&channel=1&stream=0'
+    fullURL = ip
+    response = urllib2.urlopen(fullURL)
+    rospy.loginfo(fullURL)
+
+def zoomWide():
+    ip = 'http://10.10.10.13/?command=ptz_req&req=stop&param=zoomwide&channel=1&stream=0'
+    fullURL = ip
+    response = urllib2.urlopen(fullURL)
+    rospy.loginfo(fullURL)
+
+def callback(data);
+    rospy.loginfo(data)
+    horizontal = data.buttons[4]*data.buttons[5]*data.axes[6]
+    vertical = data.buttons[4]*data.buttons[5]*data.axes[7]
+    zoom = data.buttons[4]*data.buttons[5]*data.axes[1]
+
+
+def joySunba():
+    rospy.init_node("joy_sunba", anonymous=True)
+    rospy.Subscriber("/joy", Joy, callback)
+
+    rospy.spin()()
+
+if __name__== '__main__':
+    joySunba()
+
+
+
